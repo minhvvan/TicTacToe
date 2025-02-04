@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PopupUI : MonoBehaviour, IPopupUI
+public class PopupUI : MonoBehaviour, IGameUI
 {
     [SerializeField] private Button _buttonConfirm;
     [SerializeField] private Button _buttonCancel;
@@ -74,10 +74,8 @@ public class PopupUI : MonoBehaviour, IPopupUI
     }
 }
 
-public interface IPopupUI
+public interface IGameUI
 {
-    public void SetConfirmCallback(PopupUI.OnClickCallback callback);
-    public void SetCancelCallback(PopupUI.OnClickCallback callback);
     public void Show();
     public void Hide();
 }

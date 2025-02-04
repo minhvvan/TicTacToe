@@ -1,46 +1,56 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    private Dictionary<UIType, IPopupUI> _UICache = new();
-    public RectTransform _popupUIPrefab;
+    private Dictionary<UIType, IGameUI> _UICache = new();
+    [SerializeField] private SerializedDictionary<UIType, RectTransform> _uiPrefabs = new();
     public Canvas canvas;
-    
+
     void ConfirmCallback()
     {
-        Debug.Log("Clicked Confirm");
         if (_UICache.TryGetValue(UIType.Popup_Confirm, out var popup)) popup.Hide();
     }
 
     void CancelCallback()
     {
-        Debug.Log("Cancel Confirm");
         if (_UICache.TryGetValue(UIType.Popup_Confirm, out var popup)) popup.Hide();
     }
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (_UICache.TryGetValue(UIType.Popup_Confirm, out var popup))
-            {
-                popup.Show();
-                return;
-            }
 
-            var confirmPopup = Instantiate(_popupUIPrefab, canvas.transform).GetComponent<PopupUI>();
-            confirmPopup.SetConfirmCallback(ConfirmCallback);
-            confirmPopup.SetCancelCallback(CancelCallback);
-            confirmPopup.SetMessageText("게임을 종료하시겠습니까?");
-            confirmPopup.SetButtonText("확인");
-            
-            _UICache[UIType.Popup_Confirm] = confirmPopup;
-            
-            confirmPopup.Show();
+    public void ShowUI(UIType type)
+    {
+        if (_UICache.TryGetValue(type, out var gameUI))
+        {
+            gameUI.Show();
+            return;
         }
+        
+        var ui = Instantiate(_uiPrefabs[type], canvas.transform).GetComponent<IGameUI>();
+        _UICache[type] = ui;
+            
+        ui.Show();
+    }
+    
+    public void HideUI(UIType type)
+    {
+        if (_UICache.TryGetValue(type, out var gameUI))
+        {
+            gameUI.Hide();
+        }
+    }
+
+    public T GetUI<T>(UIType type) where T : class, IGameUI
+    {
+        if (_UICache.TryGetValue(type, out var gameUI))
+        {
+            return gameUI as T;
+        }
+        
+        var ui = Instantiate(_uiPrefabs[type], canvas.transform).GetComponent<IGameUI>();
+        return (_UICache[type] = ui) as T;
     }
 }
 
@@ -49,5 +59,8 @@ public enum UIType
 {
     None,
     Popup_Confirm,
+    Popup_Select_Maker,
+    StartPanel,
+    EndPanel,
     Max
 }
