@@ -36,8 +36,10 @@ public class GameManager : Singleton<GameManager>
         _blockController.SetAllBlockActive(true);
     }
 
-    private void EndGame()
+    private IEnumerator EndGame()
     {
+        yield return new WaitForSeconds(3f);
+        
         _board = new PlayerType[3, 3];
         _blockController.CleanUp();
         
@@ -108,7 +110,7 @@ public class GameManager : Singleton<GameManager>
         _gameResult = CheckEndGame();
         if (_gameResult != GameResult.None)
         {
-            EndGame();
+            StartCoroutine(EndGame());
             return;
         }
         
@@ -118,6 +120,9 @@ public class GameManager : Singleton<GameManager>
     private GameResult CheckEndGame()
     {
         if (IsBoardFull()) return GameResult.Draw;
+
+        GameResult currentResult = GameResult.None;
+        List<(int, int)> matched = new();
         
         //row
         for (var i = 0; i < _board.GetLength(0); i++)
@@ -126,7 +131,8 @@ public class GameManager : Singleton<GameManager>
             
             if (_board[i, 0] == _board[i, 1] && _board[i, 1] == _board[i, 2])
             {
-                return _board[i, 0] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+                currentResult = _board[i, 0] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+                matched.AddRange(new []{(i, 0), (i, 1), (i, 2)});
             }
         }
         
@@ -137,22 +143,30 @@ public class GameManager : Singleton<GameManager>
             
             if (_board[0, i] == _board[1, i] && _board[1, i] == _board[2, i])
             {
-                return _board[0, i] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+                currentResult = _board[0, i] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+                matched.AddRange(new []{(0, i), (1, i), (2, i)});
             }
         }
         
         //diag
         if (_board[0, 0] != PlayerType.None && _board[0, 0] == _board[1, 1] && _board[1, 1] == _board[2, 2])
         {
-            return _board[0, 0] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+            currentResult = _board[0, 0] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+            matched.AddRange(new []{(0, 0), (1, 1), (2, 2)});
         }
         
         if (_board[0, 2] != PlayerType.None && _board[0, 2] == _board[1, 1] && _board[1, 1] == _board[2, 0])
         {
-            return _board[0, 2] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+            currentResult = _board[0, 2] == PlayerType.PlayerA ? GameResult.PlayerAWin : GameResult.PlayerBWin;
+            matched.AddRange(new []{(0, 2), (1, 1), (2, 0)});
+        }
+
+        if (matched.Count != 0)
+        {
+            _blockController.SetBlockColor(matched, currentResult == GameResult.PlayerAWin ? GameColor.PlayerABlock : GameColor.PlayerBBlock);
         }
         
-        return GameResult.None;
+        return currentResult;
     }
 
     private bool IsBoardFull()

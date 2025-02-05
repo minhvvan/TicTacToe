@@ -633,7 +633,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _blockController: {fileID: 1946494213}
-  _uiManager: {fileID: 645467459}
 --- !u!1 &763552255
 GameObject:
   m_ObjectHideFlags: 0

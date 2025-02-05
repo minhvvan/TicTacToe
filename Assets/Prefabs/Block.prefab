@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e96c89c565bd1cd469925b267dbc4868, type: 3}
-  m_Color: {r: 0.7877358, g: 0.8777174, b: 1, a: 1}
+  m_Color: {r: 0.78823537, g: 0.87843144, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -102,6 +102,7 @@ MonoBehaviour:
   oSprite: {fileID: 21300000, guid: 56b68a1f3ed303c4b90fa225c8580195, type: 3}
   xSprite: {fileID: 21300000, guid: 0f11393c540489e4daff03ae0d31470b, type: 3}
   makerSpriteRenderer: {fileID: 8358437501232777826}
+  _colorDict: {fileID: 11400000, guid: c70768ccc2d7b494b8cd180277bf17e6, type: 2}
 --- !u!61 &5212083060172454702
 BoxCollider2D:
   m_ObjectHideFlags: 0

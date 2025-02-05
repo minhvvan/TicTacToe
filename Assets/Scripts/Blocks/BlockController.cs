@@ -43,4 +43,13 @@ public class BlockController : MonoBehaviour
         
         SetAllBlockActive(false);
     }
+
+    public void SetBlockColor(List<(int, int)> blocks, GameColor color)
+    {
+        foreach (var block in blocks)
+        {
+            int index = block.Item1 * 3 + block.Item2;
+            _blocks[index].SetColor(color);
+        }
+    }
 }
