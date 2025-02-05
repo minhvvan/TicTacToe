@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f5b92ef57c97a54e934001b2dc0d276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oSprite: {fileID: 21300000, guid: 56b68a1f3ed303c4b90fa225c8580195, type: 3}
-  xSprite: {fileID: 21300000, guid: 0f11393c540489e4daff03ae0d31470b, type: 3}
+  oSprite: {fileID: 21300000, guid: c25d1b01840c84d2b8c2fa646778f710, type: 3}
+  xSprite: {fileID: 21300000, guid: 7d3734582876c4e5a94637fc4d480648, type: 3}
   makerSpriteRenderer: {fileID: 8358437501232777826}
   _colorDict: {fileID: 11400000, guid: c70768ccc2d7b494b8cd180277bf17e6, type: 2}
 --- !u!61 &5212083060172454702
@@ -175,8 +175,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4194216297649998498}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -226,7 +226,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0

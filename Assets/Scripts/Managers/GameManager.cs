@@ -39,7 +39,7 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator EndGame()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         
         _board = new PlayerType[3, 3];
         _blockController.CleanUp();
