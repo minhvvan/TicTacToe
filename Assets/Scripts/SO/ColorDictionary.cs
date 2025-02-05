@@ -15,5 +15,7 @@ public enum GameColor
     DefaultBlock,
     PlayerABlock,
     PlayerBBlock,
+    TurnOn,
+    TurnOff,
     Max
 }

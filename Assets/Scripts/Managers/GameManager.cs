@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private BlockController _blockController;
+    [SerializeField] private TurnBox _turnBox;
     private PlayerType[,] _board;
     private PlayerType _currentTurn;
     
@@ -115,6 +116,7 @@ public class GameManager : Singleton<GameManager>
         }
         
         _currentTurn = _currentTurn == PlayerType.PlayerA ? PlayerType.PlayerB : PlayerType.PlayerA;
+        _turnBox.SetTurn(_currentTurn);
     }
 
     private GameResult CheckEndGame()
