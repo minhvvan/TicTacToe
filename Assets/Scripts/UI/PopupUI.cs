@@ -5,15 +5,14 @@ using UnityEngine.UI;
 
 public class PopupUI : MonoBehaviour, IGameUI
 {
+    [SerializeField] private RectTransform _popup;
     [SerializeField] private Button _buttonConfirm;
     [SerializeField] private Button _buttonCancel;
     [SerializeField] private TMP_Text _textMessage;
     [SerializeField] private TMP_Text _textButtonText;
 
     public delegate void OnClickCallback();
-
     private OnClickCallback _onConfirmClicked;
-    private OnClickCallback _onCancelClicked;
 
     void Awake()
     {
@@ -24,11 +23,6 @@ public class PopupUI : MonoBehaviour, IGameUI
     public void SetConfirmCallback(OnClickCallback callback)
     {
         _onConfirmClicked = callback;
-    }
-
-    public void SetCancelCallback(OnClickCallback callback)
-    {
-        _onCancelClicked = callback;
     }
 
     public void SetMessageText(string text)
@@ -48,24 +42,24 @@ public class PopupUI : MonoBehaviour, IGameUI
     
     private void OnCancelClicked()
     {
-        _onCancelClicked();
+        UIManager.Instance.HideUI(UIType.Popup_Confirm);
     }
 
     public void Show()
     {
-        transform.DOKill();
+        _popup.transform.DOKill();
         gameObject.SetActive(true);
     
-        transform.localScale = Vector3.zero;
-        transform.DOScale(Vector3.one, 0.5f)
+        _popup.transform.localScale = Vector3.zero;
+        _popup.transform.DOScale(Vector3.one, 0.2f)
             .SetEase(Ease.OutBack);
     }
     
     public void Hide()
     {
-        transform.DOKill();
+        _popup.transform.DOKill();
     
-        transform.DOScale(Vector3.zero, 0.5f)
+        _popup.transform.DOScale(Vector3.zero, 0.2f)
             .SetEase(Ease.InQuint)
             .OnComplete(() =>
             {

@@ -193,6 +193,17 @@ public class GameManager : Singleton<GameManager>
     {
         _gameMode = mode;
     }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        // 에디터에서 실행 중일 때
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // 빌드된 게임에서 실행 중일 때
+            Application.Quit();
+#endif
+    }
 }
 
 public enum PlayerType { None, PlayerA, PlayerB }

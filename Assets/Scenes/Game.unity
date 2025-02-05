@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 19912227}
   - component: {fileID: 19912226}
   m_Layer: 5
-  m_Name: Button
+  m_Name: BtnExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -523,7 +523,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1310442157}
-  - {fileID: 631091544}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -732,7 +731,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 272079299}
+    m_TransformParent: {fileID: 1310442157}
     m_Modifications:
     - target: {fileID: 623533981008745722, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_Name
@@ -804,15 +803,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2761577595571063577, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2761577595571063577, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2761577595571063577, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2761577595571063577, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -844,6 +843,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3827665308125300818, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
       propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3827665308125300818, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5314930449283697393, guid: 618701fff8b340e45b3e855040d7c1e6, type: 3}
@@ -1216,6 +1219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1310442157}
+  - component: {fileID: 1310442158}
   m_Layer: 5
   m_Name: GamePanel
   m_TagString: Untagged
@@ -1236,6 +1240,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 19912225}
+  - {fileID: 631091544}
   m_Father: {fileID: 272079299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1243,6 +1248,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1310442158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310442156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d86913173af8f542927cfe7e990efc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buttonExit: {fileID: 19912226}
 --- !u!1001 &1740929361
 PrefabInstance:
   m_ObjectHideFlags: 0

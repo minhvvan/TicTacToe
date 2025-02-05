@@ -18,17 +18,8 @@ public class EndPanel : MonoBehaviour, IGameUI
             UIManager.Instance.ShowUI(UIType.StartPanel);
             UIManager.Instance.HideUI(UIType.EndPanel);
         });
-        
-        _buttonExit.onClick.AddListener(() =>
-        {
-#if UNITY_EDITOR
-            // 에디터에서 실행 중일 때
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-        // 빌드된 게임에서 실행 중일 때
-            Application.Quit();
-#endif
-        });
+
+        _buttonExit.onClick.AddListener(GameManager.Instance.ExitGame);
     }
 
     public void Show()

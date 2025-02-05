@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
 public class Block : MonoBehaviour
@@ -48,6 +49,8 @@ public class Block : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         if (!isActive) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        
         OnClicked?.Invoke();
     }
 
