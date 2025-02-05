@@ -39,17 +39,34 @@ public class GameManager : Singleton<GameManager>
     private void EndGame()
     {
         var endPanel = UIManager.Instance.GetUI<EndPanel>(UIType.EndPanel);
-        
-        if ((_gameResult == GameResult.PlayerAWin && _1PType == PlayerType.PlayerA) ||
-            (_gameResult == GameResult.PlayerAWin && _1PType == PlayerType.PlayerA))
+
+        string gameResultStr = "";
+        switch (_gameMode)
         {
-            endPanel.SetGameResult("Win!!");
+            case GameMode.Solo:
+            {
+                if ((_gameResult == GameResult.PlayerAWin && _1PType == PlayerType.PlayerA) ||
+                    (_gameResult == GameResult.PlayerBWin && _1PType == PlayerType.PlayerB))
+                {
+                    gameResultStr = "Win!!";
+                }
+                else
+                {
+                    gameResultStr = "Lose..";
+                }
+                
+                break;
+            }
+            case GameMode.Multi:
+            {
+                gameResultStr = _gameResult == GameResult.PlayerAWin ? "1P Win!!" : "2P Win!!";
+                break;
+            }
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        else
-        {
-            endPanel.SetGameResult("Lose..");
-        }
-        
+
+        endPanel.SetGameResult(gameResultStr);
         UIManager.Instance.ShowUI(UIType.EndPanel);
     }
 

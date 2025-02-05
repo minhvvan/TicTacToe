@@ -8,6 +8,7 @@ public class StartPanel : MonoBehaviour, IGameUI
 {
     [SerializeField] private Button _button1P;
     [SerializeField] private Button _button2P;
+    [SerializeField] private Button _buttonExit;
 
     private void Start()
     {
@@ -21,6 +22,17 @@ public class StartPanel : MonoBehaviour, IGameUI
         {
             GameManager.Instance.StartGame();
             GameManager.Instance.SetGameMode(GameMode.Multi);
+        });
+        
+        _buttonExit.onClick.AddListener(() =>
+        {
+#if UNITY_EDITOR
+            // 에디터에서 실행 중일 때
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // 빌드된 게임에서 실행 중일 때
+            Application.Quit();
+#endif
         });
     }
 
