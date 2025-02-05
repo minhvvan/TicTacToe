@@ -27,14 +27,14 @@ public class Block : MonoBehaviour
     {
         if (type == PlayerType.None)
         {
-            Clear();
+            CleanUp();
             return;
         }
         
         makerSpriteRenderer.sprite = type == PlayerType.PlayerA ? oSprite : xSprite;
     }
 
-    public void Clear()
+    public void CleanUp()
     {
         OnClicked = null;
         makerSpriteRenderer.sprite = null;

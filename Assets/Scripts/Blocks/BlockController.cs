@@ -13,16 +13,7 @@ public class BlockController : MonoBehaviour
     public void Awake()
     {
         _blocks = GetComponentsInChildren<Block>().ToList();
-
-        for(int i = 0 ; i < _blocks.Count; i++)
-        {
-            var i1 = i;
-            _blocks[i].Clear();
-            _blocks[i].OnClicked += () =>
-            {
-                OnBlockClicked?.Invoke(i1);
-            };
-        }
+        CleanUp();
     }
 
     public void PlaceMaker(PlayerType type, int index)
@@ -36,5 +27,20 @@ public class BlockController : MonoBehaviour
         {
             block.IsActive = bActive;
         }
+    }
+
+    public void CleanUp()
+    {
+        for(int i = 0 ; i < _blocks.Count; i++)
+        {
+            var i1 = i;
+            _blocks[i].CleanUp();
+            _blocks[i].OnClicked += () =>
+            {
+                OnBlockClicked?.Invoke(i1);
+            };
+        }
+        
+        SetAllBlockActive(false);
     }
 }

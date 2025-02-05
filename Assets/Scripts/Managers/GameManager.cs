@@ -38,6 +38,9 @@ public class GameManager : Singleton<GameManager>
 
     private void EndGame()
     {
+        _board = new PlayerType[3, 3];
+        _blockController.CleanUp();
+        
         var endPanel = UIManager.Instance.GetUI<EndPanel>(UIType.EndPanel);
 
         string gameResultStr = "";
