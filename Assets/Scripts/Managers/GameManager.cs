@@ -44,29 +44,36 @@ public class GameManager : Singleton<GameManager>
         var endPanel = UIManager.Instance.GetUI<EndPanel>(UIType.EndPanel);
 
         string gameResultStr = "";
-        switch (_gameMode)
+        if (_gameResult == GameResult.Draw)
         {
-            case GameMode.Solo:
+            gameResultStr = "Draw";
+        }
+        else
+        {
+            switch (_gameMode)
             {
-                if ((_gameResult == GameResult.PlayerAWin && _1PType == PlayerType.PlayerA) ||
-                    (_gameResult == GameResult.PlayerBWin && _1PType == PlayerType.PlayerB))
+                case GameMode.Solo:
                 {
-                    gameResultStr = "Win!!";
-                }
-                else
-                {
-                    gameResultStr = "Lose..";
-                }
+                    if ((_gameResult == GameResult.PlayerAWin && _1PType == PlayerType.PlayerA) ||
+                        (_gameResult == GameResult.PlayerBWin && _1PType == PlayerType.PlayerB))
+                    {
+                        gameResultStr = "Win!!";
+                    }
+                    else
+                    {
+                        gameResultStr = "Lose..";
+                    }
                 
-                break;
+                    break;
+                }
+                case GameMode.Multi:
+                {
+                    gameResultStr = _gameResult == GameResult.PlayerAWin ? "1P Win!!" : "2P Win!!";
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            case GameMode.Multi:
-            {
-                gameResultStr = _gameResult == GameResult.PlayerAWin ? "1P Win!!" : "2P Win!!";
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException();
         }
 
         endPanel.SetGameResult(gameResultStr);
