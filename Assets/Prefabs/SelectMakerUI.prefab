@@ -750,6 +750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ce8f344d7d24948804f839a807a1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _popup: {fileID: 854595747902030006}
   _buttonConfirm: {fileID: 0}
   _buttonCancel: {fileID: 0}
   _textMessage: {fileID: 0}

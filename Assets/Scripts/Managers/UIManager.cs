@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using DG.Tweening;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
@@ -51,6 +52,17 @@ public class UIManager : Singleton<UIManager>
         
         var ui = Instantiate(_uiPrefabs[type], canvas.transform).GetComponent<IGameUI>();
         return (_UICache[type] = ui) as T;
+    }
+
+    public void SwitchPanel(UIType hidePanel, UIType showPanel)
+    {
+        HideUI(hidePanel);
+    
+        // 약간의 딜레이 후 새 패널을 보여줌
+        DOVirtual.DelayedCall(0.1f, () =>
+        {
+            ShowUI(showPanel);
+        });
     }
 }
 

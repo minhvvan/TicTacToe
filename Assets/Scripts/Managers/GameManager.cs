@@ -33,6 +33,13 @@ public class GameManager : Singleton<GameManager>
     {
         UIManager.Instance.HideUI(UIType.StartPanel);
         _currentTurn = PlayerType.PlayerA;
+        _gameResult = GameResult.None;
+        _turnBox.SetTurn(PlayerType.PlayerA);
+
+        if (_gameMode == GameMode.Solo && _currentTurn != _1PType)
+        {
+            GetAIMaker();
+        }
 
         _blockController.SetAllBlockActive(true);
     }
@@ -86,6 +93,8 @@ public class GameManager : Singleton<GameManager>
     private void OnBlockClicked(int index)
     {
         if (_gameMode == GameMode.Solo && _currentTurn != _1PType) return;
+        if (_gameResult != GameResult.None) return;
+        
         PlaceMaker(index);
     }
 
@@ -117,12 +126,21 @@ public class GameManager : Singleton<GameManager>
         
         _currentTurn = _currentTurn == PlayerType.PlayerA ? PlayerType.PlayerB : PlayerType.PlayerA;
         _turnBox.SetTurn(_currentTurn);
+
+        if (_gameMode == GameMode.Solo && _currentTurn != _1PType)
+        {
+            GetAIMaker();
+        }
+    }
+
+    private void GetAIMaker()
+    {
+        var result = AIController.FindNextMove(_board);
+        PlaceMaker(result.row * 3 + result.col);
     }
 
     private GameResult CheckEndGame()
     {
-        if (IsBoardFull()) return GameResult.Draw;
-
         GameResult currentResult = GameResult.None;
         List<(int, int)> matched = new();
         
@@ -168,7 +186,7 @@ public class GameManager : Singleton<GameManager>
             _blockController.SetBlockColor(matched, currentResult == GameResult.PlayerAWin ? GameColor.PlayerABlock : GameColor.PlayerBBlock);
         }
         
-        return currentResult;
+        return IsBoardFull() ? GameResult.Draw : currentResult;
     }
 
     private bool IsBoardFull()
