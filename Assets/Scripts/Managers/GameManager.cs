@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -18,11 +19,20 @@ public class GameManager : Singleton<GameManager>
     
     private void Start()
     {
-        //TODO: 로그인 완료되면 게임 StartPanel
-        UIManager.Instance.ShowUI(UIType.SigninPanel);
-        //
-        // InitGame();
-        // UIManager.Instance.ShowUI(UIType.StartPanel);
+        StartCoroutine(NetworkManager.Instance.GetScore(() =>
+        {
+            //TODO: Set UserInfo 
+            UIManager.Instance.ShowUI(UIType.StartPanel);
+        },
+        () =>
+        {
+            UIManager.Instance.ShowUI(UIType.SigninPanel);
+        }));
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _blockController = GameObject.FindObjectOfType<BlockController>();
     }
 
     private void InitGame()
@@ -32,7 +42,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     public void StartGame()
-    {
+    { 
+        SceneManager.LoadScene("Game");
+        InitGame();
+        
         UIManager.Instance.HideUI(UIType.StartPanel);
         _currentTurn = PlayerType.PlayerA;
         _gameResult = GameResult.None;

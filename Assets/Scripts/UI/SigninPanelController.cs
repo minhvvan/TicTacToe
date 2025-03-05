@@ -18,6 +18,14 @@ public struct SigninResult
     public int result;
 }
 
+public struct ScoreResult
+{
+    public string id;
+    public string username;
+    public string nickname;
+    public int result;
+}
+
 public class SigninPanelController : MonoBehaviour, IGameUI
 {
     [SerializeField] TMP_InputField usernameInputField;

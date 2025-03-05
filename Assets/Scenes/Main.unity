@@ -409,6 +409,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiPrefabs:
     _serializedList:
+    - Key: 2
+      Value: {fileID: 854595747902030006, guid: 54793d6d78535604c967ed3c767b3167, type: 3}
     - Key: 1
       Value: {fileID: 854595747902030006, guid: 17f94fadaff5760418fccecbaa0ef76a, type: 3}
     - Key: 5
@@ -416,7 +418,7 @@ MonoBehaviour:
     - Key: 6
       Value: {fileID: 5803924814436174586, guid: 023e865f4d4b5d541b367c381574df0f, type: 3}
     - Key: 3
-      Value: {fileID: 854595747902030006, guid: 54793d6d78535604c967ed3c767b3167, type: 3}
+      Value: {fileID: 5504049617322918642, guid: dad0c64754c57f949ad68e4a33a80566, type: 3}
   canvas: {fileID: 272079298}
 --- !u!1 &763552255
 GameObject:
