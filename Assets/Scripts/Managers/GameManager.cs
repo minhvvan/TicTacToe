@@ -15,12 +15,14 @@ public class GameManager : Singleton<GameManager>
     private GameResult _gameResult;
     private GameMode _gameMode;
     private PlayerType _1PType;
-
+    
     private void Start()
     {
-        InitGame();
-        
-        UIManager.Instance.ShowUI(UIType.StartPanel);
+        //TODO: 로그인 완료되면 게임 StartPanel
+        UIManager.Instance.ShowUI(UIType.SigninPanel);
+        //
+        // InitGame();
+        // UIManager.Instance.ShowUI(UIType.StartPanel);
     }
 
     private void InitGame()
@@ -98,7 +100,7 @@ public class GameManager : Singleton<GameManager>
         PlaceMaker(index);
     }
 
-    public void PlaceMaker(int index)
+    private void PlaceMaker(int index)
     {
         int row = index / 3;
         int col = index % 3;

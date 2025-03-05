@@ -74,5 +74,7 @@ public enum UIType
     Popup_Select_Maker,
     StartPanel,
     EndPanel,
+    SigninPanel,
+    SignupPanel,
     Max
 }
