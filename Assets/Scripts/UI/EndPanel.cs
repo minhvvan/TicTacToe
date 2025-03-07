@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndPanel : MonoBehaviour, IGameUI
@@ -16,18 +17,17 @@ public class EndPanel : MonoBehaviour, IGameUI
     {
         _buttonMenu.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowUI(UIType.StartPanel);
-            UIManager.Instance.HideUI(UIType.EndPanel);
+            SceneManager.LoadScene("Main");
         });
 
         _buttonExit.onClick.AddListener(() =>
         {
-            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
             popup.SetButtonText("확인");
             popup.SetMessageText("게임을 종료하시겠습니까?");
             popup.SetConfirmCallback(GameManager.Instance.ExitGame);
         
-            UIManager.Instance.ShowUI(UIType.Popup_Confirm);
+            UIManager.Instance.ShowUI(UIType.PopupConfirm);
         });
     }
 

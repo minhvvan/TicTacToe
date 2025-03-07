@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,46 +18,154 @@ public class GameManager : Singleton<GameManager>
     private GameMode _gameMode;
     private PlayerType _1PType;
     
-    private void Start()
+    private MultiplayManager _multiplayManager;
+    private string _roomId;
+    
+    public UserInfo UserInfo { get; set; }
+    public Action<MessageData> OnReceiveMessage;
+
+    public void ConnectToServer()
     {
-        StartCoroutine(NetworkManager.Instance.GetScore(() =>
-        {
-            //TODO: Set UserInfo 
-            UIManager.Instance.ShowUI(UIType.StartPanel);
-        },
-        () =>
-        {
-            UIManager.Instance.ShowUI(UIType.SigninPanel);
-        }));
+        _multiplayManager = new MultiplayManager(ConnectServerHandler, ReceiveMessageHandler, PlaceMakerHandler, ChangeTurnHandler);
     }
 
-    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void ChangeTurnHandler()
     {
-        _blockController = GameObject.FindObjectOfType<BlockController>();
+        UnityThread.executeInUpdate(() =>
+        {
+            _currentTurn = _currentTurn == PlayerType.PlayerA ? PlayerType.PlayerB : PlayerType.PlayerA;
+            _turnBox.SetTurn(_currentTurn);
+        });
+    }
+    
+    private void PlaceMakerHandler(PlaceMakerData data)
+    {
+        UnityThread.executeInUpdate(() =>
+        {
+            int row = data.index / 3;
+            int col = data.index % 3;
+            var maker = (PlayerType)data.makerType;
+
+            _board[row, col] = maker;
+            _blockController.PlaceMaker(maker, data.index);
+            
+            _gameResult = CheckEndGame();
+            if (_gameResult != GameResult.None)
+            {
+                StartCoroutine(EndGame());
+                return;
+            }
+        });
+    }
+    
+    private void ReceiveMessageHandler(MessageData data)
+    {
+        OnReceiveMessage?.Invoke(data);
+    }
+
+    private void ConnectServerHandler(Constants.MultiplayManagerState state, string id)
+    {
+        switch (state)
+        {
+            case Constants.MultiplayManagerState.CreateRoom:
+            {
+                UnityThread.executeInUpdate(() =>
+                {
+                    _roomId = id;
+                    GameManager.Instance.Set1PMaker(PlayerType.PlayerA);
+                    UIManager.Instance.SwitchPanel(UIType.StartPanel, UIType.LobbyPanel);
+                });
+                break;
+            }
+            case Constants.MultiplayManagerState.JoinRoom:
+            {
+                UnityThread.executeInUpdate(() =>
+                {
+                    _roomId = id;
+                    GameManager.Instance.Set1PMaker(PlayerType.PlayerB);
+                    UIManager.Instance.SwitchPanel(UIType.StartPanel, UIType.LobbyPanel);
+                });
+                break;
+            }
+            case Constants.MultiplayManagerState.StartGame:
+            {
+                UnityThread.executeInUpdate(() =>
+                {
+                    SceneManager.LoadScene("Game");
+                });
+                break;
+            }
+            case Constants.MultiplayManagerState.EndGame:
+            {
+                break;
+            }
+        }
+    }
+
+    public void SendChatMessage(string message)
+    {
+        if (!_roomId.IsUnityNull() && !_multiplayManager.IsUnityNull())
+        {
+            _multiplayManager?.SendMessage(_roomId, UserInfo.nickname, message);
+        }
     }
 
     private void InitGame()
     {
         _board = new PlayerType[3, 3];
-        _blockController.OnBlockClicked += OnBlockClicked;
-    }
 
-    public void StartGame()
-    { 
-        SceneManager.LoadScene("Game");
-        InitGame();
-        
-        UIManager.Instance.HideUI(UIType.StartPanel);
-        _currentTurn = PlayerType.PlayerA;
-        _gameResult = GameResult.None;
-        _turnBox.SetTurn(PlayerType.PlayerA);
-
-        if (_gameMode == GameMode.Solo && _currentTurn != _1PType)
+        if (_blockController == null)
         {
-            GetAIMaker();
+            _blockController = GameObject.FindObjectOfType<BlockController>();
         }
 
-        _blockController.SetAllBlockActive(true);
+        if (_turnBox == null)
+        {
+            _turnBox = GameObject.FindObjectOfType<TurnBox>();
+        }
+        
+        _blockController.OnBlockClicked += OnBlockClicked;
+    }
+    
+    public void StartGame()
+    {
+        SceneManager.LoadScene("Game");
+        if (!_roomId.IsUnityNull() && !_multiplayManager.IsUnityNull())
+        {
+            _multiplayManager?.SendStartGame(_roomId);
+        }
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Main")
+        {
+            StartCoroutine(NetworkManager.Instance.GetScore((userData) =>
+                {
+                    UserInfo = userData;
+                    UIManager.Instance.ShowUI(UIType.StartPanel);
+                },
+                () =>
+                {
+                    UIManager.Instance.ShowUI(UIType.SigninPanel);
+                }));
+        }
+        else if (scene.name == "Game")
+        {
+            // 초기화 작업 수행
+            InitGame();
+        
+            _currentTurn = PlayerType.PlayerA;
+            _gameResult = GameResult.None;
+            _turnBox.SetTurn(PlayerType.PlayerA);
+
+            if (_gameMode == GameMode.Solo && _currentTurn != _1PType)
+            {
+                GetAIMaker();
+            }
+
+            _blockController.SetAllBlockActive(true);
+        }
     }
 
     private IEnumerator EndGame()
@@ -72,6 +181,11 @@ public class GameManager : Singleton<GameManager>
         if (_gameResult == GameResult.Draw)
         {
             gameResultStr = "Draw";
+            ScoreData score = new()
+            {
+                score = Constants.WinScore
+            };
+            StartCoroutine(NetworkManager.Instance.AddScore(score));
         }
         else
         {
@@ -83,6 +197,13 @@ public class GameManager : Singleton<GameManager>
                         (_gameResult == GameResult.PlayerBWin && _1PType == PlayerType.PlayerB))
                     {
                         gameResultStr = "Win!!";
+
+                        ScoreData score = new()
+                        {
+                            score = Constants.WinScore
+                        };
+
+                        StartCoroutine(NetworkManager.Instance.AddScore(score));
                     }
                     else
                     {
@@ -93,7 +214,17 @@ public class GameManager : Singleton<GameManager>
                 }
                 case GameMode.Multi:
                 {
-                    gameResultStr = _gameResult == GameResult.PlayerAWin ? "1P Win!!" : "2P Win!!";
+                    if (_gameResult == GameResult.PlayerAWin)
+                    {
+                        if (_1PType == PlayerType.PlayerA) gameResultStr = "Win!!";
+                        else if(_1PType == PlayerType.PlayerB) gameResultStr = "Lose..";
+                    }
+                    else if (_gameResult == GameResult.PlayerBWin)
+                    {
+                        if (_1PType == PlayerType.PlayerA) gameResultStr = "Lose..";
+                        else if(_1PType == PlayerType.PlayerB) gameResultStr = "Win!!";
+                    }
+                    
                     break;
                 }
                 default:
@@ -107,7 +238,7 @@ public class GameManager : Singleton<GameManager>
 
     private void OnBlockClicked(int index)
     {
-        if (_gameMode == GameMode.Solo && _currentTurn != _1PType) return;
+        if (_currentTurn != _1PType) return;
         if (_gameResult != GameResult.None) return;
         
         PlaceMaker(index);
@@ -127,6 +258,11 @@ public class GameManager : Singleton<GameManager>
         _board[row, col] = _currentTurn;
         _blockController.PlaceMaker(_currentTurn, index);
 
+        if (_gameMode == GameMode.Multi)
+        {
+            _multiplayManager.SendPlaceMaker(_roomId, _currentTurn, index);
+        }
+        
         SetNextTurn();
     }
 
@@ -145,6 +281,10 @@ public class GameManager : Singleton<GameManager>
         if (_gameMode == GameMode.Solo && _currentTurn != _1PType)
         {
             GetAIMaker();
+        }
+        else if (_gameMode == GameMode.Multi)
+        {
+            _multiplayManager.SendChangeTurn(_roomId);
         }
     }
 
@@ -236,6 +376,11 @@ public class GameManager : Singleton<GameManager>
         // 빌드된 게임에서 실행 중일 때
             Application.Quit();
 #endif
+    }
+    
+    private void OnApplicationQuit()
+    {
+        _multiplayManager.Dispose();
     }
 }
 

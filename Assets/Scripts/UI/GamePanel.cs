@@ -15,11 +15,11 @@ public class GamePanel : MonoBehaviour
 
     private void OnClickExit()
     {
-        var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+        var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
         popup.SetButtonText("확인");
         popup.SetMessageText("게임을 종료하시겠습니까?");
         popup.SetConfirmCallback(GameManager.Instance.ExitGame);
         
-        UIManager.Instance.ShowUI(UIType.Popup_Confirm);
+        UIManager.Instance.ShowUI(UIType.PopupConfirm);
     }
 }

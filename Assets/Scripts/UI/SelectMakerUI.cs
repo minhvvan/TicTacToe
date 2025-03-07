@@ -14,7 +14,7 @@ public class SelectMakerUI : PopupUI
     {
         _buttonO.onClick.AddListener(() =>
         {
-            UIManager.Instance.HideUI(UIType.Popup_Select_Maker);
+            UIManager.Instance.HideUI(UIType.PopupSelectMaker);
             GameManager.Instance.Set1PMaker(PlayerType.PlayerA);
             GameManager.Instance.StartGame();
         });
@@ -22,7 +22,7 @@ public class SelectMakerUI : PopupUI
         _buttonX.onClick.AddListener(() =>
         {
             GameManager.Instance.Set1PMaker(PlayerType.PlayerB);
-            UIManager.Instance.HideUI(UIType.Popup_Select_Maker);
+            UIManager.Instance.HideUI(UIType.PopupSelectMaker);
             GameManager.Instance.StartGame();
         });
     }

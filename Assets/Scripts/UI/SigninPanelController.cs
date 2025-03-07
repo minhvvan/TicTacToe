@@ -7,25 +7,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public struct SigninData
-{
-    public string username;
-    public string password;
-}
-
-public struct SigninResult
-{
-    public int result;
-}
-
-public struct ScoreResult
-{
-    public string id;
-    public string username;
-    public string nickname;
-    public int result;
-}
-
 public class SigninPanelController : MonoBehaviour, IGameUI
 {
     [SerializeField] TMP_InputField usernameInputField;
@@ -46,7 +27,7 @@ public class SigninPanelController : MonoBehaviour, IGameUI
 
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
             popup.SetMessageText("Username과 Password를 모두 입력해주세요.");
             popup.SetButtonText("확인");
             popup.SetConfirmCallback(() => { popup.Hide();});
@@ -57,7 +38,7 @@ public class SigninPanelController : MonoBehaviour, IGameUI
         StartCoroutine(NetworkManager.Instance.Signin(new SigninData() { username = username, password = password }, ShowStartPanel,
             () =>
             {
-                var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+                var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
                 popup.SetMessageText("로그인에 실패하였습니다.");
                 popup.SetButtonText("확인");
                 popup.SetConfirmCallback(() => { popup.Hide();});

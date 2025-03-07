@@ -7,13 +7,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public struct SignupData
-{
-    public string username;
-    public string nickname;
-    public string password;
-}
-
 public class SignupPanelController : MonoBehaviour, IGameUI
 {
     [SerializeField] private Button confirmButton;
@@ -41,7 +34,7 @@ public class SignupPanelController : MonoBehaviour, IGameUI
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(nickname) ||
             string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
         {
-            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
             popup.SetMessageText("Please, enter all fields");
             popup.SetButtonText("확인");
             popup.SetConfirmCallback(() => { popup.Hide();});
@@ -53,7 +46,7 @@ public class SignupPanelController : MonoBehaviour, IGameUI
 
         if (!password.Equals(confirmPassword))
         {
-            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
             popup.SetMessageText("passwords do not match");
             popup.SetButtonText("확인");
             popup.SetConfirmCallback(() => { popup.Hide();});
@@ -74,7 +67,7 @@ public class SignupPanelController : MonoBehaviour, IGameUI
 
     private void FailureSignup()
     {
-        var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+        var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
         popup.SetMessageText("회원 가입에 실패하였습니다.");
         popup.SetButtonText("확인");
         popup.SetConfirmCallback(() => { popup.Hide();});

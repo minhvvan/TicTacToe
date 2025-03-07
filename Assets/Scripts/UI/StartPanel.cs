@@ -10,29 +10,36 @@ public class StartPanel : MonoBehaviour, IGameUI
     [SerializeField] private Button _button1P;
     [SerializeField] private Button _button2P;
     [SerializeField] private Button _buttonExit;
+    [SerializeField] private Button _buttonLeaderboard;
 
     private void Start()
     {
         _button1P.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowUI(UIType.Popup_Select_Maker);
+            UIManager.Instance.ShowUI(UIType.PopupSelectMaker);
             GameManager.Instance.SetGameMode(GameMode.Solo);
         });
         
         _button2P.onClick.AddListener(() =>
         {
-            GameManager.Instance.StartGame();
+            //TODO: 서버 연결
             GameManager.Instance.SetGameMode(GameMode.Multi);
+            GameManager.Instance.ConnectToServer();
         });
         
         _buttonExit.onClick.AddListener(() =>
         {
-            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.Popup_Confirm);
+            var popup = UIManager.Instance.GetUI<PopupUI>(UIType.PopupConfirm);
             popup.SetButtonText("확인");
             popup.SetMessageText("게임을 종료하시겠습니까?");
             popup.SetConfirmCallback(GameManager.Instance.ExitGame);
         
-            UIManager.Instance.ShowUI(UIType.Popup_Confirm);
+            UIManager.Instance.ShowUI(UIType.PopupConfirm);
+        });
+
+        _buttonLeaderboard.onClick.AddListener(() =>
+        {
+            UIManager.Instance.ShowUI(UIType.LeaderboardPanel);
         });
     }
 

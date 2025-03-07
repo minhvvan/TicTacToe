@@ -42,7 +42,7 @@ public class PopupUI : MonoBehaviour, IGameUI
     
     private void OnCancelClicked()
     {
-        UIManager.Instance.HideUI(UIType.Popup_Confirm);
+        UIManager.Instance.HideUI(UIType.PopupConfirm);
     }
 
     public void Show()

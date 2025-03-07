@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -13,17 +15,17 @@ public class UIManager : Singleton<UIManager>
 
     void ConfirmCallback()
     {
-        if (_UICache.TryGetValue(UIType.Popup_Confirm, out var popup)) popup.Hide();
+        if (_UICache.TryGetValue(UIType.PopupConfirm, out var popup)) popup.Hide();
     }
 
     void CancelCallback()
     {
-        if (_UICache.TryGetValue(UIType.Popup_Confirm, out var popup)) popup.Hide();
+        if (_UICache.TryGetValue(UIType.PopupConfirm, out var popup)) popup.Hide();
     }
 
     public void ShowUI(UIType type)
     {
-        if (_UICache.TryGetValue(type, out var gameUI))
+        if (_UICache.TryGetValue(type, out var gameUI) && !gameUI.IsUnityNull())
         {
             gameUI.Show();
             return;
@@ -45,7 +47,7 @@ public class UIManager : Singleton<UIManager>
 
     public T GetUI<T>(UIType type) where T : class, IGameUI
     {
-        if (_UICache.TryGetValue(type, out var gameUI))
+        if (_UICache.TryGetValue(type, out var gameUI) &&  !gameUI.IsUnityNull())
         {
             return gameUI as T;
         }
@@ -64,17 +66,24 @@ public class UIManager : Singleton<UIManager>
             ShowUI(showPanel);
         });
     }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+    }
 }
 
 [Serializable]
 public enum UIType
 {
     None,
-    Popup_Confirm,
-    Popup_Select_Maker,
+    PopupConfirm,
+    PopupSelectMaker,
     StartPanel,
     EndPanel,
     SigninPanel,
     SignupPanel,
+    LeaderboardPanel,
+    LobbyPanel,
     Max
 }
